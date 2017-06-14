@@ -57,6 +57,7 @@ RUN apt-get update && \
         sqlite3 \
         git \
         curl \
+        wget \
         vim \
         nano \
         postgresql-client \
@@ -76,7 +77,7 @@ RUN curl -s http://getcomposer.org/installer | php && \
 #####################################
 
 # Install Drush and add its bin to the PATH.
-RUN wget http://files.drush.org/drush.phar \
+RUN curl -O http://files.drush.org/drush.phar && \
     php drush.phar core-status \
     chmod +x drush.phar \
     mv drush.phar /usr/local/bin/drush \
@@ -87,9 +88,8 @@ RUN wget http://files.drush.org/drush.phar \
 #####################################
 
 # Install Terminus and add its bin to the PATH.
-RUN curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar && \
-    php installer.phar install --install-dir=/usr/local/bin/terminus \
-    echo "export PATH="$PATH:/usr/local/bin/terminus/bin" >> ~/.bashrc
+RUN curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar && php installer.phar install
+#    echo "export PATH=${PATH}:/usr/local/bin/terminus/bin" >> ~/.bashrc
 
 # Source the bash
 RUN . ~/.bashrc
